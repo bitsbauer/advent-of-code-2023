@@ -1,23 +1,8 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Day01
+﻿namespace Day01
 {
     class Trebuchet
     {
-        private static readonly Dictionary<string, string> NumberMapping = new()
-        {
-            { "one", "1" },
-            { "two", "2" },
-            { "three", "3" },
-            { "four", "4" },
-            { "five", "5" },
-            { "six", "6" },
-            { "seven", "7" },
-            { "eight", "8" },
-            { "nine", "9" }
-        };
-
-        private static int CalculateCalibration(string[] lines)
+        private static int CalculatePartOne(string[] lines)
         {
             int sum = 0;
             foreach (var line in lines)
@@ -32,22 +17,53 @@ namespace Day01
             return sum;
         }
 
-        private static string[] Sanatize(string[] lines)
+        private static int CalculatePartTwo(string[] lines)
         {
-            return lines.Select(line => {
-                var matches = Regex.Matches(line, @"(one|two|three|four|five|six|seven|eight|nine)");
-                if (matches.Count > 0)
+            Dictionary<string, int> mapping = new()
+            {
+                { "one", 1 },
+                { "two", 2 },
+                { "three", 3 },
+                { "four", 4 },
+                { "five", 5 },
+                { "six", 6 },
+                { "seven", 7 },
+                { "eight", 8 },
+                { "nine", 9 }
+            };
+            for (int i = 1; i < 10; i++)
+            {
+                mapping.Add(i.ToString(), i);
+            }
+
+            int sum = 0;
+            foreach (var line in lines)
+            {
+                var firstIndex = line.Length;
+                var firstValue = 0;
+                var secondIndex = -1;
+                var secondValue = 0;
+                foreach (var pair in mapping)
                 {
-                    line = line.Remove(matches[0].Index, matches[0].Length).Insert(matches[0].Index, NumberMapping[matches[0].Value]);
+                    var index = line.IndexOf(pair.Key);
+                    if (index != -1 && index < firstIndex)
+                    {
+                        firstIndex = index;
+                        firstValue = pair.Value;
+                    }
+                    index = line.LastIndexOf(pair.Key);
+                    if (index != -1 && index > secondIndex)
+                    {
+                        secondIndex = index;
+                        secondValue = pair.Value;
+                    }
                 }
-                matches = Regex.Matches(line, @"(one|two|three|four|five|six|seven|eight|nine)");
-                if (matches.Count > 0)
-                {
-                    line = line.Remove(matches.Last().Index, matches.Last().Length).Insert(matches.Last().Index, NumberMapping[matches.Last().Value]);
-                }
-                return line;
-            }).ToArray();
+                sum += firstValue * 10 + secondValue;
+            }
+            return sum;
         }
+
+
 
         static void Main(string[] args)
         {
@@ -55,10 +71,10 @@ namespace Day01
 
             string[] calibrations = File.ReadAllLines("input.txt");
 
-            int resultOne = CalculateCalibration(calibrations);
+            int resultOne = CalculatePartOne(calibrations);
             Console.WriteLine($"Part 1: The sum of all calibration values is: {resultOne}");
 
-            int resultTwo = CalculateCalibration(Sanatize(calibrations));
+            int resultTwo = CalculatePartTwo(calibrations);
             Console.WriteLine($"Part 2: The sum of all calibration values is: {resultTwo}");
         }
     }
