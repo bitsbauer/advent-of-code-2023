@@ -55,6 +55,50 @@ namespace Day02
             return possibleGames;
         }
         
+        private static int CalculatePartTwo(string[] lines)
+        {
+            int sumOfPowers = 0;
+
+            foreach (var game in lines)
+            {
+                int maxRed = 0;
+                int maxGreen = 0;
+                int maxBlue = 0;
+
+                var matches = Regex.Matches(game, @"(\d+) (red|green|blue)");
+
+                foreach (Match match in matches)
+                {
+                    var value = int.Parse(match.Groups[1].Value);
+                    var color = match.Groups[2].Value;
+
+                    switch (color)
+                    {
+                        case "red":
+                            if (value > maxRed)
+                            {
+                                maxRed = value;
+                            }
+                            break;
+                        case "green":
+                            if (value > maxGreen)
+                            {
+                                maxGreen = value;
+                            }
+                            break;
+                        case "blue":
+                            if (value > maxBlue)
+                            {
+                                maxBlue = value;
+                            }
+                            break;
+                    }
+                }
+                sumOfPowers += maxRed * maxGreen * maxBlue;
+            }
+
+            return sumOfPowers;
+        }   
 
         static void Main(string[] args)
         {
@@ -64,6 +108,9 @@ namespace Day02
 
             var resultOne = CalculatePartOne(input);
             Console.WriteLine($"Part 1: Sum of IDs of possible games: {resultOne}");
+
+            var resultTwo = CalculatePartTwo(input);
+            Console.WriteLine($"Part 1: Sum of power of minimum sets: {resultTwo}");
         }
     }
 }
