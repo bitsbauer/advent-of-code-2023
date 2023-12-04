@@ -6,7 +6,7 @@ namespace Day04
     {
         private static string[][] SplitLines(string[] lines)
         {
-            return lines.Select(line => SplitLine(line)).ToArray();
+            return lines.Select(SplitLine).ToArray();
         }
 
         private static string[] SplitLine(string line)
@@ -54,7 +54,25 @@ namespace Day04
 
         private static int CalculatePartTwo(string[] lines)
         {   
-            return RecursiveScratchcardCount(lines, Enumerable.Range(0, lines.Length).ToArray(), 0);
+            
+            Queue<int> queue = new Queue<int>(Enumerable.Range(0, lines.Length));
+            int[] matchCounts = lines.Select(line => GetMatches(SplitLine(line)).Count).ToArray();
+
+            var total = 0;
+            while (queue.Count > 0) {
+                int idx = queue.Dequeue();
+                total += 1;
+                if (matchCounts[idx] > 0) {
+                    int[] newIdxs = Enumerable.Range(idx + 1, matchCounts[idx]).ToArray();
+                    foreach (int newIdx in newIdxs) {
+                        queue.Enqueue(newIdx);
+                    }
+                }
+            }
+            return total;
+
+            // LEGACY SOLUTION (RECURSIVE) - TOO SLOW
+            // return RecursiveScratchcardCount(lines, Enumerable.Range(0, lines.Length).ToArray(), 0);
         }
 
         static void Main(string[] args)
