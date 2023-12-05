@@ -2,7 +2,7 @@
 {
     class IfYouGiveASeedAFertilizer
     {
-        private static Tuple<List<string>, List<long>, Dictionary<string, List<string>>> ParseInput(string[] lines)
+        private static Tuple<List<List<long[]>>, List<long>> ParseInput(string[] lines)
         {
             var pipeline = new List<string>();
             var seeds = new List<long>();
@@ -28,7 +28,9 @@
                     maps[currentKey].Add(line);
                 }
             }
-            return new Tuple<List<string>, List<long>, Dictionary<string, List<string>>> (pipeline, [.. seeds], maps);
+            var sorted = pipeline.Select(step => SortMap(maps[step])).ToList();
+
+            return new Tuple<List<List<long[]>>, List<long>> (sorted, [.. seeds]);
         }
 
         private static List<long[]> SortMap(List<string> map) 
@@ -50,15 +52,8 @@
             return result;
         }
 
-        private static long CalculatePartOne(string[] lines)
+        private static long FindLowestLocation(List<List<long[]>> sorted, List<long> seeds)
         {
-            var parsedInput = ParseInput(lines);
-            var pipeline = parsedInput.Item1;
-            var seeds = parsedInput.Item2;
-            var maps = parsedInput.Item3;
-
-            var sorted =  pipeline.Select(step => SortMap(maps[step])).ToList();
-
             var lowestLocation = Int64.MaxValue;
             foreach(var seed in seeds) {
                 var currentSeed = seed;
@@ -79,6 +74,28 @@
             return lowestLocation;
         }
 
+        private static long CalculatePartOne(string[] lines)
+        {
+            var parsed = ParseInput(lines);
+            return FindLowestLocation(parsed.Item1, parsed.Item2);
+        }
+
+        private static long CalculatePartTwo(string[] lines)
+        {
+            var parsed = ParseInput(lines);
+
+            var seeds = new List<long>();
+            for (int i = 0; i < parsed.Item2.Count; i += 2)
+            {
+                for(long j = parsed.Item2[i]; j < parsed.Item2[i] + parsed.Item2[i+1]; j++) {
+                    seeds.Add(j);
+                }
+            }
+
+            return FindLowestLocation(parsed.Item1, seeds);
+        }
+
+
         static void Main(string[] args)
         {
             Console.WriteLine("Advent of Code 2023 - Day 5: If You Give A Seed A Fertilizer (https://adventofcode.com/2023/day/5)");
@@ -87,6 +104,9 @@
 
             var resultOne = CalculatePartOne(input);
             Console.WriteLine($"Part 1: Lowest location number: {resultOne}");
+            
+            var resultTwo = CalculatePartTwo(input);
+            Console.WriteLine($"Part 2: Lowest location number expanded seeds: {resultTwo}");
         }
     }
 }
