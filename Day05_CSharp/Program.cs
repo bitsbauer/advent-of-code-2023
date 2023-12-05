@@ -81,12 +81,12 @@
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Advent of Code 2023 - Day 3: (https://adventofcode.com/2023/day/5)");
+            Console.WriteLine("Advent of Code 2023 - Day 5: If You Give A Seed A Fertilizer (https://adventofcode.com/2023/day/5)");
 
             string[] input = File.ReadAllLines("input.txt");
 
             var resultOne = CalculatePartOne(input);
-            Console.WriteLine($"Part 1: : {resultOne}");
+            Console.WriteLine($"Part 1: Lowest location number: {resultOne}");
         }
     }
 }
