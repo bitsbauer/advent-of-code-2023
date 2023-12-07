@@ -21,7 +21,7 @@ namespace Day06
                 var time = times[i];
                 var distance = distances[i];
 
-                // formula for calculating the distance like x = (distance - time) * time leads to a quadratic equation with two solutions. 
+                // Formula for calculating the distance like x = (distance - time) * time leads to a quadratic equation with two solutions. 
                 // The difference between the solutions is the number of ways to beat the record. -x^2 + tx - d = 0 with t = time and d = distance
 
                 double sqh = Math.Sqrt(time * time - 4 * distance) / 2f;
