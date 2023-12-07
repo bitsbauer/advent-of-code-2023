@@ -26,13 +26,14 @@
         {
             var e = EvaluateHand(hand);
             switch (e.Count) {
+
                 case 5:
-                    if (useJoker && e[4].Key == 1) {
+                    if (useJoker && e.Any(x => x.Key == 1)) {
                         return 2;
                     }
                     return 1;
                 case 4:
-                    if (useJoker && (e[0].Key == 1 || e[3].Key == 1)) {
+                    if (useJoker && e.Any(x => x.Key == 1)) {
                         return 4;
                     }
                     return 2;
@@ -51,7 +52,7 @@
                     }
                     else
                     {
-                        if (useJoker && (e[0].Key == 1 || e[1].Key == 1 || e[2].Key == 1)) {
+                       if (useJoker && e.Any(x => x.Key == 1)) {
                             return 6;
                         }
                         return 4;
@@ -59,14 +60,14 @@
                 case 2:
                     if (e[0].Value == 3)
                     {
-                        if (useJoker && (e[0].Key == 1 || e[1].Key == 1)) {
+                        if (useJoker && e.Any(x => x.Key == 1)) {
                             return 7;
                         }
                         return 5;
                     }
                     else
                     {
-                        if (useJoker && (e[0].Key == 1 || e[1].Key == 1)) {
+                        if (useJoker && e.Any(x => x.Key == 1)) {
                             return 7;
                         }
                         return 6;
